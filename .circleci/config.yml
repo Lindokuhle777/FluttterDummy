@@ -1,19 +1,10 @@
-version: '2.1'
-orbs:
-  codecov: codecov/codecov@3.0.0
-  flutter: circleci/flutter@1.1.0
-  
+version: 2.1
+
 jobs:
-  main-job:
+  build:
     docker:
       - image: cirrusci/flutter
     steps:
       - checkout
       - run: flutter doctor
       - run: flutter test --coverage
-      - codecov/upload
-
-workflows:
-  test:
-    jobs:
-      - main-job
