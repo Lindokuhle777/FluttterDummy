@@ -4,6 +4,8 @@
 
 ![CircleCI](https://img.shields.io/circleci/build/github/Lindokuhle777/FluttterDummy/master)
 
+![Codecov](https://img.shields.io/codecov/c/github/Lindokuhle777/FluttterDummy)
+
 A new Flutter project.
 
 ## Getting Started
