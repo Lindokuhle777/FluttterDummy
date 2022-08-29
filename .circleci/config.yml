@@ -7,5 +7,5 @@ workflows:
     jobs:
       - flutter/unit_test:
           version: 2.2.3
-            post-steps:
+          post-steps:
             - upload/codecov
