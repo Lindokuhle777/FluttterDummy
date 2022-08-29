@@ -1,24 +1,20 @@
 version: '2.1'
 orbs:
-  coveralls: coveralls/coveralls@1.0.6
+  codecov: codecov/codecov@3.0.0
   flutter: circleci/flutter@1.1.0
+  
 jobs:
-  build-project:
+  example-job:
     docker:
       - image: cirrusci/flutter
     steps:
       - checkout
       - run: flutter doctor
       - run: flutter test --coverage
-  uploadd:
-    docker:
-      -image: 'circleci/node:10.0.0'
-    steps:
-      - upload/coveralls
+      - codecov/upload:
+          token: '11783fa9-3f56-4954-9464-88b47187bff8' 
+
 workflows:
-  upload-to-codecov:
+  example-workflow:
     jobs:
-      - build-project
-      - uploadd:
-        requires:
-          - build-project
+      - example-job
