@@ -1,11 +1,24 @@
 version: '2.1'
 orbs:
-  flutter: circleci/flutter@1.2.0
-  codecov: codecov/codecov@3.2.3
+  coveralls: coveralls/coveralls@1.0.6
+  flutter: circleci/flutter@1.1.0
+jobs:
+  build-project:
+    docker:
+      - image: cirrusci/flutter
+    steps:
+      - checkout
+      - run: flutter doctor
+      - run: flutter test --coverage
+  uploadd:
+    docker:
+      -image: 'circleci/node:10.0.0'
+    steps:
+      - upload/coveralls
 workflows:
-  test:
+  upload-to-codecov:
     jobs:
-      - flutter/unit_test:
-          version: 2.2.3
-          post-steps:
-            - upload/codecov
+      - build-project
+      - uploadd:
+        requires:
+          - build-project
