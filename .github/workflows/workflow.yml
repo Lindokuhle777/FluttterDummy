@@ -4,14 +4,15 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    name: Test python API
+    runs-on: ubuntu-latest, macos-latest
+    name: Test flutter API
     steps:
     - uses: actions/checkout@v3
     - uses: subosito/flutter-actions@v2
       with:
         flutter-version: '3.0.5'
         channel: 'stable'
+    - run: flutter --version
     - name: Install requirements
       run: flutter pub get
     - name: Run tests and collect coverage
