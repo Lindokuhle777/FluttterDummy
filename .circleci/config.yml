@@ -12,7 +12,7 @@ jobs:
       - run: flutter doctor
       - run: flutter test --coverage
       - codecov/upload:
-          token: $codecov_token 
+          token: ${CODECOV_TOKEN} 
 
 workflows:
   test:
