@@ -4,7 +4,7 @@ orbs:
   flutter: circleci/flutter@1.1.0
   
 jobs:
-  example-job:
+  main-job:
     docker:
       - image: cirrusci/flutter
     steps:
@@ -15,6 +15,6 @@ jobs:
           token: '11783fa9-3f56-4954-9464-88b47187bff8' 
 
 workflows:
-  example-workflow:
+  test:
     jobs:
-      - example-job
+      - main-job
