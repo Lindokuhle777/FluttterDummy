@@ -1,21 +1,12 @@
-name: API workflow
-
-on: [push, pull_request]
-
+name: test-my-app
+on: [push, workflow_dispatch]
 jobs:
-  build:
-    runs-on: ubuntu-latest, macos-latest
-    name: Test flutter API
+  drive:
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: subosito/flutter-actions@v2
-      with:
-        flutter-version: '3.0.5'
-        channel: 'stable'
-    - run: flutter --version
-    - name: Install requirements
-      run: flutter pub get
-    - name: Run tests and collect coverage
-      run: flutter test --coverage
-    - name: Upload coverage reports to Codecov with GitHub Action
-      uses: codecov/codecov-action@v3
+    - uses: actions/checkout@v1
+    - uses: subosito/flutter-action@v1
+    - run: flutter test --coverage
+    - uses: actions/checkout@master
+    - uses: codecov/codecov-action@v3
+    
