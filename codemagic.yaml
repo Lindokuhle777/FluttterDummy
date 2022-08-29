@@ -1,0 +1,56 @@
+# Automatically generated on 2022-08-29 UTC from https://codemagic.io/app/630cd7632923d87c5ca28d39/settings
+# Note that this configuration is not an exact match to UI settings. Review and adjust as necessary.
+
+workflows:
+  default-workflow:
+    name: Default Workflow
+    max_build_duration: 100
+    environment:
+      vars:
+        codecov_token: Encrypted(Z0FBQUFBQmpETnlCSlpyMW9QUTVMcVg2cVZ6X0Q2UXB2MlBPaHdNc0V5Q1djeE5MWTY1d2xjbUcyUU81aVRzX3dsOEpNMUgwMERsVjRoTHFUTUtPUVFmWG9ycWk5R2VUdzFZUjlvZ2U4cTNBQnQ1STFHU1pCQTJ3Rm5FUXlEcS03Z0xEcWpjUVJ0cHg=)
+      flutter: default
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - |
+        # set up debug keystore
+        rm -f ~/.android/debug.keystore
+        keytool -genkeypair \
+          -alias androiddebugkey \
+          -keypass android \
+          -keystore ~/.android/debug.keystore \
+          -storepass android \
+          -dname 'CN=Android Debug,O=Android,C=US' \
+          -keyalg 'RSA' \
+          -keysize 2048 \
+          -validity 10000
+      - |
+        # set up local properties
+        echo "flutter.sdk=$HOME/programs/flutter" > "$FCI_BUILD_DIR/android/local.properties"
+      - flutter packages pub get
+      - flutter build appbundle --debug
+      - find . -name "Podfile" -execdir pod install \;
+      - flutter build ios --debug --no-codesign
+      - name: Coverage report
+        script: |
+          HOMEBREW_NO_AUTO_UPDATE=1 brew install lcov
+          mkdir -p test-results 
+          flutter test --coverage --machine > test-results/flutter.json  
+          code_coverage=$(lcov --list $FCI_BUILD_DIR/coverage/lcov.info | sed -n "s/.*Total:|\(.*\)%.*/\1/p")
+          echo "Code Coverage: ${code_coverage}% "
+          if (( $(echo "$code_coverage < $CODE_COVERAGE_TARGET" | bc) )); then { echo "code coverage is less than expected" && exit 1; }; fi  
+        test_report: test-results/flutter.json
+
+    artifacts:
+      - build/**/outputs/apk/**/*.apk
+      - build/**/outputs/bundle/**/*.aab
+      - build/**/outputs/**/mapping.txt
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - '*.snap'
+      - build/windows/**/*.msix
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - lsmabena72@gmail.com
