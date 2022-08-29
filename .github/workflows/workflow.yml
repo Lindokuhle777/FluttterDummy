@@ -1,11 +1,14 @@
-name: Example workflow for Codecov
-on: [push]
+name: Frontend workflow
+
+on:[push]
+
 jobs:
-  run:
-    steps:
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        fail_ci_if_error: true
-        verbose: true
+  build:
+    - name: Flutter action
+      uses: subosito/flutter-action@v2.6.2
+    - name: Install requirements
+      run: flutter pub get
+    - name: Run tests and collect coverage
+      run: flutter test --coverage
+    - name: Upload coverage reports to Codecov with GitHub Action
+      uses: codecov/codecov-action@v2
