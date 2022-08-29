@@ -12,7 +12,7 @@ jobs:
       - run: flutter doctor
       - run: flutter test --coverage
       - codecov/upload:
-          token: '11783fa9-3f56-4954-9464-88b47187bff8' 
+          token: $codecov_token 
 
 workflows:
   test:
