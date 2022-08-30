@@ -5,10 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+      with:
+        fetch-depth: 2
     - uses: subosito/flutter-action@v1
+    - run: flutter pub get
     - run: flutter test --coverage
     - uses: actions/checkout@master
-    - uses: codecov/codecov-action@v3
+    - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        files: ./coverage/icov.info
